@@ -187,7 +187,7 @@ class TestForecastLineEmployee(BaseForecastLineTest):
         # employee becomes 50% consultant, 50% PM on Feb 1st
         roles = self.employee_consultant.role_ids
         roles.write({"date_end": "2022-01-31"})
-        self.env["base"].flush()
+        self.env["base"].flush_model()
         lines = self.env["forecast.line"].search(
             [
                 ("employee_id", "=", self.employee_consultant.id),
@@ -215,7 +215,7 @@ class TestForecastLineEmployee(BaseForecastLineTest):
                 },
             ]
         )
-        self.env["base"].flush()
+        self.env["base"].flush_model()
         lines = self.env["forecast.line"].search(
             [
                 ("employee_id", "=", self.employee_consultant.id),
@@ -254,7 +254,7 @@ class TestForecastLineEmployee(BaseForecastLineTest):
                 "time_type": "leave",
             }
         )
-        self.env["base"].flush()
+        self.env["base"].flush_model()
         lines = self.env["forecast.line"].search(
             [
                 ("employee_id", "=", self.employee_dev.id),
@@ -448,7 +448,7 @@ class TestForecastLineTimesheet(BaseForecastLineTest):
                     "unit_amount": 8,
                 }
             )
-            task.flush()
+            task.flush_model()
             forecast_lines = self.env["forecast.line"].search(
                 [("res_id", "=", task.id), ("res_model", "=", "project.task")]
             )
@@ -538,7 +538,7 @@ class TestForecastLineProjectReschedule(BaseForecastLineTest):
             # flush needed here to trigger the recomputation with the correct
             # frozen time (otherwise it is called by the test runner before the
             # tests, outside of the context manager.
-            cls.task.flush()
+            cls.task.flush_model()
 
     @freeze_time("2022-02-01 12:00:00")
     def test_task_unlink(self):
@@ -557,7 +557,7 @@ class TestForecastLineProjectReschedule(BaseForecastLineTest):
         )
         self.assertEqual(task_forecast.mapped("employee_id"), self.employee_consultant)
         self.task.user_ids = self.user_pm
-        self.task.flush()
+        self.task.flush_model()
         task_forecast_after = self.env["forecast.line"].search(
             [("task_id", "=", self.task.id)]
         )
@@ -578,7 +578,7 @@ class TestForecastLineProjectReschedule(BaseForecastLineTest):
                 "forecast_date_planned_end": "2022-02-16",
             }
         )
-        self.task.flush()
+        self.task.flush_model()
         task_forecast_after = self.env["forecast.line"].search(
             [("task_id", "=", self.task.id)]
         )
@@ -682,7 +682,7 @@ class TestForecastLineProject(BaseForecastLineTest):
         project_1 = ProjectProject.create({"name": "TestProject1"})
         # set project in stage "to do" to get forecast
         project_1.stage_id = self.env.ref("project.project_project_stage_0")
-        project_1.flush()
+        project_1.flush_model()
         task_values = {
             "project_id": project_1.id,
             "forecast_role_id": self.role_consultant.id,
@@ -700,7 +700,7 @@ class TestForecastLineProject(BaseForecastLineTest):
         # Project 2 is in stage "in rogress" to get forecast
         project_2 = ProjectProject.create({"name": "TestProject2"})
         project_2.stage_id = self.env.ref("project.project_project_stage_1")
-        project_2.flush()
+        project_2.flush_model()
         task_values.update({"project_id": project_2.id, "name": "Task3"})
         task_3 = ProjectTask.create(task_values)
         task_3.user_ids = self.user_consultant
@@ -768,7 +768,7 @@ class TestForecastLineProject(BaseForecastLineTest):
         # create new ones -> we check that the project task lines are
         # automatically related to the new newly created employee role lines.
         leave_request.action_validate()
-        leave_request.flush()
+        leave_request.flush_model()
         forecast_lines = self.env["forecast.line"].search(
             [
                 ("employee_id", "=", self.employee_consultant.id),
@@ -803,7 +803,7 @@ class TestForecastLineProject(BaseForecastLineTest):
             project = ProjectProject.create({"name": "TestProject"})
             # set project in stage "in progress" to get confirmed forecast
             project.stage_id = self.env.ref("project.project_project_stage_1")
-            project.flush()
+            project.flush_model()
             task = ProjectTask.create(
                 {
                     "name": "Task1",
@@ -847,7 +847,7 @@ class TestForecastLineProject(BaseForecastLineTest):
             project = ProjectProject.create({"name": "TestProject"})
             # set project in stage "in progress" to get confirmed forecast
             project.stage_id = self.env.ref("project.project_project_stage_1")
-            project.flush()
+            project.flush_model()
             task1 = ProjectTask.create(
                 {
                     "name": "Task1",
@@ -929,7 +929,7 @@ class TestForecastLineProject(BaseForecastLineTest):
         project = ProjectProject.create({"name": "TestProjectDiffRoles"})
         # set project in stage "in progress" to get confirmed forecast
         project.stage_id = self.env.ref("project.project_project_stage_1")
-        project.flush()
+        project.flush_model()
         task = ProjectTask.create(
             {
                 "name": "TaskDiffRoles",
@@ -998,7 +998,7 @@ class TestForecastLineProject(BaseForecastLineTest):
         project = ProjectProject.create({"name": "TestProjectDiffRoles"})
         # set project in stage "in progress" to get confirmed forecast
         project.stage_id = self.env.ref("project.project_project_stage_1")
-        project.flush()
+        project.flush_model()
         task = ProjectTask.create(
             {
                 "name": "TaskDiffRoles",

@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <xpath expr="//page[@name='hr_settings']/group[1]" position="inside">
                 <group string="Forecast Roles" name="forecast_roles">
-                    <field name="role_ids">
+                    <field name="role_ids" colspan="2">
                         <tree editable="bottom">
                             <field name="sequence" widget="handle" />
                             <field name="role_id" />

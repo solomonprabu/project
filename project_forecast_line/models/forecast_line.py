@@ -30,7 +30,7 @@ class ForecastLine(models.Model):
         "forecast.role",
         string="Forecast role",
         required=True,
-        index=True,
+        index="btree",
         ondelete="restrict",
     )
     employee_id = fields.Many2one("hr.employee", string="Employee", ondelete="cascade")
@@ -38,23 +38,23 @@ class ForecastLine(models.Model):
         "hr.employee.forecast.role", string="Employee Forecast Role", ondelete="cascade"
     )
     project_id = fields.Many2one(
-        "project.project", index=True, string="Project", ondelete="cascade"
+        "project.project", index="btree", string="Project", ondelete="cascade"
     )
     task_id = fields.Many2one(
-        "project.task", index=True, string="Task", ondelete="cascade"
+        "project.task", index="btree", string="Task", ondelete="cascade"
     )
     sale_id = fields.Many2one(
         "sale.order",
         related="sale_line_id.order_id",
         store=True,
-        index=True,
+        index="btree",
         string="Sale",
     )
     sale_line_id = fields.Many2one(
-        "sale.order.line", index=True, string="Sale line", ondelete="cascade"
+        "sale.order.line", index="btree", string="Sale line", ondelete="cascade"
     )
     hr_leave_id = fields.Many2one(
-        "hr.leave", index=True, string="Leave", ondelete="cascade"
+        "hr.leave", index="btree", string="Leave", ondelete="cascade"
     )
     forecast_hours = fields.Float(
         "Forecast",
@@ -94,7 +94,7 @@ class ForecastLine(models.Model):
     employee_resource_forecast_line_id = fields.Many2one(
         "forecast.line",
         store=True,
-        index=True,
+        index="btree",
         compute="_compute_employee_forecast_line_id",
         ondelete="set null",
         help="technical field giving the name of the resource "

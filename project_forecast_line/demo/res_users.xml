@@ -14,7 +14,7 @@
             type="base64"
             file="hr/static/img/employee_fpi-image.jpg"
         />
-        <field name="employee_ids" eval="[(6, 0, [ref('hr.employee_fpi')])]" />
+        <field name="employee_ids" eval="[Command.set([ref('hr.employee_fpi')])]" />
     </record>
 
     <record id="user_han" model="res.users" context="{'no_reset_password': True}">
